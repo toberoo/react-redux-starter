@@ -1,12 +1,13 @@
 {
-  "name": "blog",
+  "name": "react-redux-starter",
   "version": "1.0.0",
   "description": "Simple blog site for personal use",
   "main": "index.js",
   "scripts": {
     "postinstall": "",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --progress --inline --hot"
+    "dev": "./node_modules/.bin/webpack-dev-server --progress --inline",
+    "build": "./node_modules/.bin/webpack"
   },
   "author": "Shehroze Khan <toberoo@gmail.com>",
   "license": "ISC",
