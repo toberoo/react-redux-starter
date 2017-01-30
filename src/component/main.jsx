@@ -1,8 +1,8 @@
 import React from 'react'
 
-const main = () => {
+const main = ({title}) => {
 	return <div className="main">
-			Cat
+			{title}
 		</div>
 }
 

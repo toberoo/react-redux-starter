@@ -8,7 +8,9 @@ import { syncHistory } from 'redux-simple-router'
 //to deal with routing changes as actions.
 const reduxRouterMiddleware = syncHistory(browserHistory)
 const store = createStore(
-	combinedReducer, {}, applyMiddleware(
+	combinedReducer,
+	{},
+	applyMiddleware(
 		thunkMiddleware, //Thunk middleware is nessecary for dispatching async actions.
 		reduxRouterMiddleware
 	)

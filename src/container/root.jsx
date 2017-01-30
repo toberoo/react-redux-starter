@@ -13,8 +13,7 @@ class RootContainer extends Component  {
 	//We can pass any action or state component by calling this.props.STATE_ITEM_OR_ACTION . The two methods
 	//below will determine what is in our props.
 	render() {
-		return <Main //state={this.props.state} fakeActions ={this.props.fakeActions}
-			>
+		return <Main title = {this.props.title}>
 
 		</Main>
 	}
@@ -22,9 +21,9 @@ class RootContainer extends Component  {
 
 /** This is inheritly risky as passing your whole state is unessecary. It makes more sense to break apart the state
 //and pass it into seperate components.**/
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
 	return {
-		 //state: state this.props.state is now available in the render method.
+		 title: state.root.title
 	}
 }
 
