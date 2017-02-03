@@ -1,6 +1,7 @@
 import React, { Component} from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import counterActions from './../action/counter.jsx'
 import Main from './../component/main.jsx'
 
 /**
@@ -9,21 +10,20 @@ import Main from './../component/main.jsx'
  * have multiple state objects.
  */
 class RootContainer extends Component  {
-
 	//We can pass any action or state component by calling this.props.STATE_ITEM_OR_ACTION . The two methods
 	//below will determine what is in our props.
 	render() {
-		return <Main title = {this.props.title}>
-
+		return <Main title={this.props.title} count={this.props.count} counterActions={this.props.counterActions}>
 		</Main>
 	}
 }
 
 /** This is inheritly risky as passing your whole state is unessecary. It makes more sense to break apart the state
 //and pass it into seperate components.**/
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
 	return {
-		 title: state.root.title
+		 title: state.counter.title,
+		 count: state.counter.count
 	}
 }
 
@@ -34,7 +34,7 @@ function mapStateToProps(state, ownProps) {
  */
 function mapDispatchToProps(dispatch) {
 	return {
-		//fakeActions: bindActionCreators({}, dispatch) this.props.fakeActions is now available in the render method.
+		counterActions: bindActionCreators(counterActions, dispatch)
 	}
 }
 

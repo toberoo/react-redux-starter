@@ -5,6 +5,6 @@ import { routeReducer } from 'redux-simple-router'
 //the combined reducers to handle all dispatched actions.
 const reducers = {
 	routing: routeReducer,
-	root: require('./root.jsx')
+	counter: require('./counter.jsx')
 };
 module.exports = combineReducers(reducers)
