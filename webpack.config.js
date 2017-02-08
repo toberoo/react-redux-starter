@@ -16,45 +16,37 @@ const PATHS = {
 };
 
 
-const config = {};
+const config = {}
+config.entry = {}
+config.devServer = {}
 config.plugins = []
 config.module = {
     rules: []
 }
 
 //Entry points
-config.entry = {
-    app: [
-        PATHS.app, //Entry point
-        'webpack-dev-server/client?http://0.0.0.0:8080', // WebpackDevServer host and port
-        'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
-    ],
-    vendor: PATHS.vendor, //Pack our vendor dependencies into their own folder.
-}
+config.entry.app = [];
 
-//Dev Server
-config.devServer = {
-    hot: true,
-    colors: true,
-    historyApiFallback: true //All routes will serve index.html
-}
+//Server info
+config.entry.app.push('webpack-hot-middleware/client')
+config.entry.app.push(PATHS.app)
 
 //Build Path
 config.output = {
     path: PATHS.dist,
-    filename: "bundle.js"
+    filename: 'bundle.js'
 }
 
 //JSX
 config.module.rules.push({
     enforce: 'pre',
     test: /\.jsx/,
-    use: "eslint-loader"
+    use: 'eslint-loader'
 })
 
 config.module.rules.push({
     test: /\.jsx/,
-    use: "babel-loader"
+    use: ['react-hot-loader', 'babel-loader']
 })
 
 //HTML
@@ -85,7 +77,8 @@ config.module.rules.push({
 config.plugins.push(new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
     filename: 'vendor.bundle.js',
-    minChunks: 2
+    minChunk: 2
 }))
+config.plugins.push(new webpack.HotModuleReplacementPlugin())
 
 module.exports = config
