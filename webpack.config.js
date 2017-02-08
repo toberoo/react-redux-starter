@@ -15,63 +15,77 @@ const PATHS = {
     node_modules: path.join(__dirname, 'node_modules')
 };
 
-module.exports = {
-    entry: {
-        app: [
-            PATHS.app, //Entry point
-            'webpack-dev-server/client?http://0.0.0.0:8080', // WebpackDevServer host and port
-            'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
-        ],
-        vendor: PATHS.vendor, //Pack our vendor dependencies into their own folder.
-    },
-    devServer: {
-        hot: true,
-        colors: true,
-        historyApiFallback: true //All routes will serve index.html
-    },
-    output: {
-        path: PATHS.dist,
-        filename: "bundle.js"
-    },
-    module: {
-        preLoaders: [
-            {
-                loader:  "eslint-loader", //Gives good feeback on errors and warnings.
-                include: PATHS.src,
-                test: /\.jsx/
-            }
-        ],
-        loaders: [
-            //JSX
-            {
-                loader:  "babel", //Convert JSX to browser safe js
-                include: PATHS.src,
-                exclude: PATHS.node_modules,
-                test: /\.jsx/
-            },
-            //Html files
-            {
-                loader: 'file?name=[name].html', //Move our html files. Only index.html in this case.
-                include: PATHS.ui,
-                test: /\.html/
-            },
-            //Styles
-            {
-                loaders: ['style', 'css', 'sass'], //Move our sass files
-                test: /\.scss$/
-            },
-            //Fonts
-            {
-                loader: 'url?limit=10000&name=[name].[ext]', //Move our font files over
-                test: /\.(ttf|eot|svg|woff|woff2)/
-            },
-            {
-                loader: 'url?limit=10000&name=[hash].[ext]', //Move image folders over
-                test: /\.(jpeg|jpg|png)/
-            }
-        ]
-    },
-      plugins: [ //This plugin breaks our vendor depends into their own bundle.
-        new webpack.optimize.CommonsChunkPlugin("vendor","vendor.bundle.js")
-    ]
-};
+
+const config = {};
+config.plugins = []
+config.module = {
+    rules: []
+}
+
+//Entry points
+config.entry = {
+    app: [
+        PATHS.app, //Entry point
+        'webpack-dev-server/client?http://0.0.0.0:8080', // WebpackDevServer host and port
+        'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
+    ],
+    vendor: PATHS.vendor, //Pack our vendor dependencies into their own folder.
+}
+
+//Dev Server
+config.devServer = {
+    hot: true,
+    colors: true,
+    historyApiFallback: true //All routes will serve index.html
+}
+
+//Build Path
+config.output = {
+    path: PATHS.dist,
+    filename: "bundle.js"
+}
+
+//JSX
+config.module.rules.push({
+    enforce: 'pre',
+    test: /\.jsx/,
+    use: "eslint-loader"
+})
+
+config.module.rules.push({
+    test: /\.jsx/,
+    use: "babel-loader"
+})
+
+//HTML
+config.module.rules.push({
+    test: /\.html/,
+    use: 'file-loader?name=[name].html'
+})
+
+//Styles
+config.module.rules.push({
+    test: /\.scss$/,
+    use: ['style-loader', 'css-loader', 'sass-loader']
+})
+
+//Fonts
+config.module.rules.push({
+    test: /\.(ttf|eot|svg|woff|woff2)/,
+    use: 'url-loader?limit=10000&name=[name].[ext]'
+})
+
+//Images
+config.module.rules.push({
+    test: /\.(jpeg|jpg|png|gif)/,
+    use: 'url-loader?limit=10000&name=[name].[ext]'
+})
+
+//Plugins
+config.plugins.push(new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendor',
+    filename: 'vendor.bundle.js',
+    minChunks: 2
+}))
+
+module.exports = config
