@@ -6,8 +6,8 @@
   "scripts": {
     "postinstall": "",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./node_modules/.bin/webpack-dev-server --progress --inline",
-    "build": "./node_modules/.bin/webpack"
+    "dev": "node server.js",
+    "build": "webpack"
   },
   "author": "Shehroze Khan <toberoo@gmail.com>",
   "license": "ISC",
