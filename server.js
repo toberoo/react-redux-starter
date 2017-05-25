@@ -1,25 +1,38 @@
-var path = require('path');
-var webpack = require('webpack');
-var express = require('express');
-var config = require('./webpack.config');
+const path = require('path');
+const webpack = require('webpack');
+const express = require('express');
+const devMiddleware = require('webpack-dev-middleware');
+const hotMiddleware = require('webpack-hot-middleware');
+const args = process.argv.slice(2);
 
-var app = express();
-var compiler = webpack(config);
+//Set enviornment
+let config = require('./config/dev.config.js');
+if (args[0] == 'qa') {
+  config = require('./config/qa.config.js');
+} else if (args[0] == 'prod') {
+  config = require('./config/prod.config.js');
+}
 
-app.use(require('webpack-dev-middleware')(compiler, {
-  publicPath: config.output.publicPath
-}));
+const app = express();
+const compiler = webpack(config);
 
-app.use(require('webpack-hot-middleware')(compiler));
+middleware = devMiddleware(compiler, {
+  publicPath: config.output.publicPath,
+  historyApiFallback: true,
+})
 
-app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
+app.use(middleware)
+app.use(hotMiddleware(compiler))
 
-app.listen(3000, function(err) {
+app.get('*', function (req, res) {
+  const htmlBuffer = middleware.fileSystem.readFileSync(`${config.output.path}/index.html`)
+  res.send(htmlBuffer.toString())
+})
+
+app.listen(3000, function (err) {
   if (err) {
     return console.error(err);
   }
-
-  console.log('Listening at http://localhost:8080/');
+  console.log('Listening at http://localhost:3000/')
+  console.log('env: ' + args[0])
 })
